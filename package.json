@@ -1,0 +1,66 @@
+{
+  "name": "purus-devpack",
+  "displayName": "Purus DevPack",
+  "description": "Purus language support: LSP diagnostics, formatting, and official syntax highlighting",
+  "version": "0.1.0",
+  "publisher": "kqnade",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kqnade/purus-devpack.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Language Packs",
+    "Extension Packs"
+  ],
+  "extensionPack": [
+    "otoneko1102.purus"
+  ],
+  "activationEvents": [
+    "onLanguage:purus"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Purus DevPack",
+      "properties": {
+        "purus.lsp.serverPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to an external purus-lsp binary. Leave empty to use the bundled server."
+        },
+        "purus.lsp.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the Purus language server"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build:extension": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --platform=node --format=cjs",
+    "build:server": "esbuild server/src/server.ts --bundle --outfile=dist/server.js --platform=node --format=cjs --external:purus --external:@puruslang/linter --external:@puruslang/prettier-plugin-purus --external:prettier",
+    "build": "npm run build:extension && npm run build:server",
+    "watch": "npm run build -- --watch",
+    "package": "npm run build && vsce package",
+    "publish": "npm run build && vsce publish"
+  },
+  "dependencies": {
+    "purus": "0.4.1",
+    "@puruslang/linter": "0.3.1",
+    "@puruslang/prettier-plugin-purus": "0.3.1",
+    "prettier": "3.8.1"
+  },
+  "devDependencies": {
+    "vscode-languageclient": "^9.0.0",
+    "vscode-languageserver": "^9.0.0",
+    "vscode-languageserver-textdocument": "^1.0.0",
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0",
+    "esbuild": "^0.20.0",
+    "@vscode/vsce": "^2.24.0"
+  }
+}
